@@ -2,45 +2,58 @@
 # !/usr/bin/env python
 """
 -------------------------------------------------
-   File Name：     ProxyApi.py  
-   Description :  
+   File Name：     ProxyApi.py
+   Description :
    Author :       JHao
    date：          2016/12/4
 -------------------------------------------------
    Change Activity:
-                   2016/12/4: 
+                   2016/12/4:
 -------------------------------------------------
 """
 __author__ = 'JHao'
 
 import sys
-
+from werkzeug.wrappers import Response
 from flask import Flask, jsonify, request
 
 sys.path.append('../')
 
+from Config.ConfigGetter import config
 from Manager.ProxyManager import ProxyManager
 
 app = Flask(__name__)
 
 
+class JsonResponse(Response):
+    @classmethod
+    def force_type(cls, response, environ=None):
+        if isinstance(response, (dict, list)):
+            response = jsonify(response)
+
+        return super(JsonResponse, cls).force_type(response, environ)
+
+
+app.response_class = JsonResponse
+
 api_list = {
     'get': u'get an usable proxy',
-    'refresh': u'refresh proxy pool',
+    # 'refresh': u'refresh proxy pool',
     'get_all': u'get all proxy from proxy pool',
     'delete?proxy=127.0.0.1:8080': u'delete an unable proxy',
+    'get_status': u'proxy statistics'
 }
 
 
 @app.route('/')
 def index():
-    return jsonify(api_list)
+    return api_list
 
 
 @app.route('/get/')
 def get():
     proxy = ProxyManager().get()
-    return proxy
+    return proxy if proxy else 'no proxy!'
 
 
 @app.route('/refresh/')
@@ -54,7 +67,7 @@ def refresh():
 @app.route('/get_all/')
 def getAll():
     proxies = ProxyManager().getAll()
-    return jsonify(list(proxies))
+    return proxies
 
 
 @app.route('/delete/', methods=['GET'])
@@ -65,13 +78,14 @@ def delete():
 
 
 @app.route('/get_status/')
-def get_status():
-    status = ProxyManager().get_status()
-    return jsonify(status)
+def getStatus():
+    status = ProxyManager().getNumber()
+    return status
 
 
 def run():
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host=config.host_ip, port=config.host_port)
+
 
 if __name__ == '__main__':
     run()
