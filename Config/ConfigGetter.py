@@ -39,7 +39,7 @@ class ConfigGetter(object):
 
     @LazyProperty
     def db_port(self):
-        return DATABASES.get("default", {}).get("PORT", 8080)
+        return DATABASES.get("default", {}).get("PORT", 8888)
 
     @LazyProperty
     def db_password(self):
@@ -56,6 +56,10 @@ class ConfigGetter(object):
     @LazyProperty
     def host_port(self):
         return SERVER_API.get("PORT", 5010)
+
+    @LazyProperty
+    def verify_host(self):
+        return VERIFY_HOST
 
 
 config = ConfigGetter()

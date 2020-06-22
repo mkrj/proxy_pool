@@ -69,7 +69,7 @@ def refresh():
 @app.route('/get_all/')
 def getAll():
     proxies = ProxyManager().getAll()
-    return [_.info_dict for _ in proxies]
+    return jsonify([_.info_dict for _ in proxies])
 
 
 @app.route('/delete/', methods=['GET'])
@@ -87,7 +87,7 @@ def getStatus():
 
 if platform.system() != "Windows":
     import gunicorn.app.base
-    from gunicorn.six import iteritems
+    from six import iteritems
 
 
     class StandaloneApplication(gunicorn.app.base.BaseApplication):

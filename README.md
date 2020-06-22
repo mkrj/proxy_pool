@@ -30,7 +30,7 @@
 ```shell
 git clone git@github.com:jhao104/proxy_pool.git
 
-或者直接到https://github.com/jhao104/proxy_pool 下载zip文件
+或者直接到https://github.com/jhao104/proxy_pool/releases 下载zip文件
 ```
 
 * 安装依赖:
@@ -47,9 +47,9 @@ pip install -r requirements.txt
 # 配置DB     
 DATABASES = {
     "default": {
-        "TYPE": "SSDB",        # 目前支持SSDB或redis数据库
+        "TYPE": "SSDB",        # 目前支持SSDB或REDIS数据库
         "HOST": "127.0.0.1",   # db host
-        "PORT": 8888,          # db port，例如SSDB通常使用8888，redis通常默认使用6379
+        "PORT": 8888,          # db port，例如SSDB通常使用8888，REDIS通常默认使用6379
         "NAME": "proxy",       # 默认配置
         "PASSWORD": ""         # db password
 
@@ -80,7 +80,7 @@ SERVER_API = {
 * 启动:
 
 ```shell
-# 如果你的依赖已经安全完成并且具备运行条件,可以在cli下运行通过ProxyPool.py启动
+# 如果你的依赖已经安装完成并且具备运行条件,可以在cli目录下通过ProxyPool.py启。动
 # 程序分为: schedule 调度程序 和 webserver Api服务
 
 # 首先启动调度程序
@@ -97,7 +97,11 @@ SERVER_API = {
 ```bash
 docker pull jhao104/proxy_pool
 
-docker run --env db_type=REDIS --env db_host=127.0.0.1 --env db_port=6379 --env db_password=pwd_str -p 5010:5010 jhao104/proxy_pool
+# 远程数据库
+docker run --env db_type=REDIS --env db_host=x.x.x.x --env db_port=6379 --env db_password=pwd_str -p 5010:5010 jhao104/proxy_pool
+
+# 宿主机上的数据库
+docker run --env db_type=REDIS --env db_host=host.docker.internal --env db_port=6379 --env db_password=pwd_str -p 5010:5010 jhao104/proxy_pool
 
 ```
 
@@ -139,7 +143,7 @@ def getHtml():
     proxy = get_proxy().get("proxy")
     while retry_count > 0:
         try:
-            html = requests.get('https://www.example.com', proxies={"http": "http://{}".format(proxy)})
+            html = requests.get('http://www.example.com', proxies={"http": "http://{}".format(proxy)})
             # 使用代理访问
             return html
         except Exception:
@@ -226,7 +230,7 @@ PROXY_GETTER = [
 
 　　这里感谢以下contributor的无私奉献：
 
-　　[@kangnwh](https://github.com/kangnwh)| [@bobobo80](https://github.com/bobobo80)| [@halleywj](https://github.com/halleywj)| [@newlyedward](https://github.com/newlyedward)| [@wang-ye](https://github.com/wang-ye)| [@gladmo](https://github.com/gladmo)| [@bernieyangmh](https://github.com/bernieyangmh)| [@PythonYXY](https://github.com/PythonYXY)| [@zuijiawoniu](https://github.com/zuijiawoniu)| [@netAir](https://github.com/netAir)| [@scil](https://github.com/scil)| [@tangrela](https://github.com/tangrela)| [@highroom](https://github.com/highroom)| [@luocaodan](https://github.com/luocaodan)| [@vc5](https://github.com/vc5)| [@1again](https://github.com/1again)| [@obaiyan](https://github.com/obaiyan)
+　　[@kangnwh](https://github.com/kangnwh)| [@bobobo80](https://github.com/bobobo80)| [@halleywj](https://github.com/halleywj)| [@newlyedward](https://github.com/newlyedward)| [@wang-ye](https://github.com/wang-ye)| [@gladmo](https://github.com/gladmo)| [@bernieyangmh](https://github.com/bernieyangmh)| [@PythonYXY](https://github.com/PythonYXY)| [@zuijiawoniu](https://github.com/zuijiawoniu)| [@netAir](https://github.com/netAir)| [@scil](https://github.com/scil)| [@tangrela](https://github.com/tangrela)| [@highroom](https://github.com/highroom)| [@luocaodan](https://github.com/luocaodan)| [@vc5](https://github.com/vc5)| [@1again](https://github.com/1again)| [@obaiyan](https://github.com/obaiyan) [@zsbh](https://github.com/zsbh)
 
 
 ### Release Notes

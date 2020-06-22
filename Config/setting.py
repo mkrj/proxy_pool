@@ -10,7 +10,6 @@
                    2019/2/15:
 -------------------------------------------------
 """
-
 import sys
 from os import getenv
 from logging import getLogger
@@ -35,7 +34,7 @@ PY3 = sys.version_info >= (3,)
 
 DB_TYPE = getenv('db_type', 'SSDB').upper()
 DB_HOST = getenv('db_host', '127.0.0.1')
-DB_PORT = getenv('db_port', '8080')
+DB_PORT = getenv('db_port', 8888)
 DB_PASSWORD = getenv('db_password', '')
 
 
@@ -54,14 +53,17 @@ DATABASES = {
 
 PROXY_GETTER = [
     "freeProxy01",
-    "freeProxy02",
+    # "freeProxy02",
     "freeProxy03",
     "freeProxy04",
     "freeProxy05",
-    "freeProxy06",
+    # "freeProxy06",
     "freeProxy07",
-    "freeProxy08",
+    # "freeProxy08",
     "freeProxy09",
+    "freeProxy13",
+    "freeProxy14",
+    "freeProxy14",
 ]
 
 """ API config http://127.0.0.1:5010 """
@@ -69,6 +71,8 @@ SERVER_API = {
     "HOST": "0.0.0.0",  # The ip specified which starting the web API
     "PORT": 5010  # port number to which the server listens to
 }
+
+VERIFY_HOST = getenv('proxy_verify_host', 'http://www.baidu.com')
 
 
 class ConfigError(BaseException):
@@ -79,8 +83,8 @@ def checkConfig():
     if DB_TYPE not in ["SSDB", "REDIS"]:
         raise ConfigError('db_type Do not support: %s, must SSDB/REDIS .' % DB_TYPE)
 
-    if not DB_PORT.isdigit():
-        raise ConfigError('db_port must be digit, not %s' % DB_PORT)
+    if type(DB_PORT) == str and not DB_PORT.isdigit():
+        raise ConfigError('if db_port is string, it must be digit, not %s' % DB_PORT)
 
     from ProxyGetter import getFreeProxy
     illegal_getter = list(filter(lambda key: not hasattr(getFreeProxy.GetFreeProxy, key), PROXY_GETTER))
